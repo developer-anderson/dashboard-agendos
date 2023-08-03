@@ -451,6 +451,7 @@ function login(formid) {
 
     type: 'post',
     dataType: 'json',
+    "Content-Type": "application/json",
     data: $("#" + formid).serialize()
   })
     .done(function (response) {
