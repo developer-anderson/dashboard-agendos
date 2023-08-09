@@ -18,7 +18,7 @@ if (!localStorage.getItem('id') && !window.location.pathname.includes('index.htm
 }
 function sair(){
   localStorage.removeItem('id');
-  window.location.href = 'login.html';
+  window.location.href = 'index.html';
 }
 $(document).ready(function () {
   $('.celular').mask('(00) 0.0000-0000');
@@ -443,42 +443,42 @@ function moeda(a, e, r, t) {
   }
   return !1
 }
-function login(formid) {
-  var dados = $("#" + formid).serialize()
+function handleSuccess(response) {
+  localStorage.setItem('id', response.id);
+  console.log(response);
+  Swal.fire({
+    title: "Sucesso",
+    text: "Login realizado com sucesso!",
+    type: "success",
+    confirmButtonClass: "btn btn-success",
+    buttonsStyling: false
+  });
+  setTimeout(function () {
+    window.location.href = 'ordem-de-servico.php';
+  }, 2000);
+}
 
-  $.ajax({
-    url: endpoint+'/login',
+function handleError(error) {
+  Swal.fire({
+    title: "Erro",
+    text: "Usuário não encontrado",
+    type: "error",
+    confirmButtonClass: "btn btn-success",
+    buttonsStyling: false
+  });
+  console.error(error);
+}
 
-    type: 'post',
-    dataType: 'json',
-    "Content-Type": "application/json",
-    data: $("#" + formid).serialize()
+function request(formid) {
+  const formData = new FormData(document.getElementById(formid));
+
+  fetch(endpoint + '/login', {
+    method: 'POST',
+    body: formData
   })
-    .done(function (response) {
-      localStorage.setItem('id', response.id);
-      console.log(response)
-      Swal.fire({
-        title: "Sucesso",
-        text: "Login realicado com sucesso!",
-        type: "success",
-        confirmButtonClass: "btn btn-success",
-        buttonsStyling: false
-      });
-      setTimeout(function () {
-        window.location.href = 'dashboard.html';
-      }, 2000)
-
-
-    })
-    .fail(function (jqXHR, textStatus, msg) {
-      Swal.fire({
-        title: "Erro",
-        text: "Usuário não encontrado",
-        type: "error",
-        confirmButtonClass: "btn btn-success",
-        buttonsStyling: false
-      });
-    });
+    .then(response => response.json())
+    .then(handleSuccess)
+    .catch(handleError);
 }
 function editarVeiculo(formid) {
   var dados = $("#" + formid).serialize()
@@ -624,23 +624,23 @@ function editarCliente(formid) {
       });
     });
 }
-if (window.location.pathname == "/listar-clientes.php") {
+if (window.location.pathname.includes("/listar-clientes.php")) {
   getAllclientByType('PF')
   getAllclientByType('PJ')
 }
-if (window.location.pathname == "/listar-veiculo.php") {
+if (window.location.pathname.includes("/listar-veiculo.php")) {
   getAllCar()
 }
-if (window.location.pathname == "/listar-receitas.php") {
+if (window.location.pathname.includes("/listar-receitas.php")) {
   getAllFluxo()
 }
-if (window.location.pathname == "/ordem-de-servico.php" || window.location.pathname == "/add_fluxo_caixa.php" || window.location.pathname == "/editar_fluxo_caixa.php") {
+if (window.location.pathname.includes("/ordem-de-servico.php") || window.location.pathname.includes("/add_fluxo_caixa.php") || window.location.pathname.includes("/editar_fluxo_caixa.php")) {
   getAllOs()
 }
-if (window.location.pathname == "/listar-servico.php") {
+if (window.location.pathname.includes("/listar-servico.php")) {
   getAllServicos()
 }
-if (window.location.pathname == "/adicionar-veiculo.php" || window.location.pathname == "/add_fluxo_caixa.php" || window.location.pathname == "/editar_fluxo_caixa.php") {
+if (window.location.pathname.includes("/adicionar-veiculo.php") || window.location.pathname.includes("/add_fluxo_caixa.php") || window.location.pathname.includes("/editar_fluxo_caixa.php")) {
   getAllclientByType('PF', true)
   getAllclientByType('PJ', true)
   var urlParams = new URLSearchParams(window.location.search);
@@ -653,13 +653,13 @@ if (window.location.pathname == "/adicionar-veiculo.php" || window.location.path
 
   }
 }
-if (window.location.pathname == "/ordem-de-servico.php") {
+if (window.location.pathname.includes("/ordem-de-servico.php")) {
   getAllclientByType('PF', true)
   getAllclientByType('PJ', true)
   getAllServicos(true)
 
 }
-if (window.location.pathname == "/editar-veiculo.php") {
+if (window.location.pathname.includes("/editar-veiculo.php")) {
   var urlParams = new URLSearchParams(window.location.search);
   id_veiculo = urlParams.get("id_veiculo")
 
@@ -681,7 +681,7 @@ if (window.location.pathname == "/editar-veiculo.php") {
   }
 
 }
-if (window.location.pathname == "/pdf_os.php") {
+if (window.location.pathname.includes("/pdf_os.php")) {
   var urlParams = new URLSearchParams(window.location.search);
   os_id = urlParams.get("os_id")
 
@@ -703,7 +703,7 @@ if (window.location.pathname == "/pdf_os.php") {
   }
 
 }
-if (window.location.pathname == "/editar-servico.php") {
+if (window.location.pathname.includes("/editar-servico.php")) {
   var urlParams = new URLSearchParams(window.location.search);
   id_servico = urlParams.get("id_servico")
 
@@ -725,7 +725,7 @@ if (window.location.pathname == "/editar-servico.php") {
   }
 
 }
-if (window.location.pathname == "/editar_fluxo_caixa.php") {
+if (window.location.pathname.includes("/editar_fluxo_caixa.php")) {
   var urlParams = new URLSearchParams(window.location.search);
   id_fluxo = urlParams.get("id_fluxo")
 
@@ -747,7 +747,7 @@ if (window.location.pathname == "/editar_fluxo_caixa.php") {
   }
 
 }
-if (window.location.pathname == "/editar-cliente.php") {
+if (window.location.pathname.includes("/editar-cliente.php")) {
   var urlParams = new URLSearchParams(window.location.search);
   id_cliente = urlParams.get("id_cliente")
 
@@ -1337,6 +1337,7 @@ function getAllServicos(select = false) {
     success: function (response) {
       options += '<option value="0">Selecione o Serviço</option>'
       Object.keys(response).forEach(function (key, index) {
+        response[key].valor = response[key].valor / 100
         html += '<tr>'
         html += '<td class="big-item-table">' + response[key].nome + '</td>'
         html += '<td class="big-item-table">' + response[key].valor.toLocaleString('pt-br', { minimumFractionDigits: 2 }) + '</td>'
