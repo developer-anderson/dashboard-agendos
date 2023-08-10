@@ -1134,7 +1134,8 @@ function getAllFluxo() {
     success: function (response) {
 
       Object.keys(response).forEach(function (key, index) {
-
+        response[key].valor  = (response[key].valor / 100)
+        response[key].desconto  = (response[key].desconto / 100)
         let inicio_data = response[key].data.split("-")
         let data_formadata_inicio = inicio_data[2] + '/' + inicio_data[1] + '/' + inicio_data[0]
         total_geral += response[key].valor
@@ -1175,6 +1176,7 @@ function getAllFluxo() {
 
       });
       $(".total_receita").text(total_receita.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}))
+      $(".ticket_medio").text((total_receita / response.length).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}))
       $(".total_servicos").text(response.length);
       $(".total_Despesas").text(totalDespesa.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}));
       $("#treceitas").html(html)

@@ -57,12 +57,10 @@
                                     <div class="card-geral-dates-content">
                                         <i class="icon p-1 icon-graph customize-icon font-large-1 p-1 success"></i>
                                         <div class="card-geral-dates-text">
-                                            <h3 class="heading-text text-bold-600">R$ 27k</h3>
-                                            <p class="sub-heading">Vendas</p>
+                                            <h3 class="heading-text text-bold-600 ticket_medio">R$ 27k</h3>
+                                            <p class="sub-heading">Ticket Médio</p>
                                         </div>
-                                        <span class="inc-dec-percentage">
-                                            <small class="success"><i class="fa fa-long-arrow-up"></i> 10.0%</small>
-                                        </span>
+                                       
                                     </div>
                                 </div>
                                 <div class="col-sm-3 col-geral-dates">
