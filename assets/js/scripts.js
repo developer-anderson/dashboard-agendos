@@ -798,66 +798,48 @@ function getPdfOs(id) {
   let subtotal = 0
   let desconto = 0;
   $.ajax({
-    url: endpoint+'/os/pdf/'+localStorage.getItem('id')+ '/' + id,
+    url: endpoint+'/os/show/' + id,
     type: 'get',
     dataType: 'json',
     success: function (response) {
-      Object.keys(response).forEach(function (key, index) {
-        let created_at = response[key].created_at.split(" ")
-        let created_at_data = created_at[0].split("-")
-        let data_formadata = created_at_data[2] + '/' + created_at_data[1] + '/' + created_at_data[0]
-        $("#data_lancamento").text(data_formadata);
-        if(response[key].nome_f){
-          $("#nome_cliente").text(response[key].nome_f);
-        }
-        else if(response[key].razao_social){
-          $("#nome_cliente").text(response[key].razao_social);
-        }
-        $("#nome_loja").text(response[key].nome_fantasia);
-        subtotal +=response[key].valor
+      const data = new Date(response[key].created_at);
+
+      const options = {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        timeZone: 'America/Sao_Paulo',
+      };
+      const formatoBR = new Intl.DateTimeFormat('pt-BR', options).format(data)
+      $("#data_lancamento").text(formatoBR);
+      if(response.cliente[0].nome_f){
+        $("#nome_cliente").text(response.cliente[0].nome_f);
+      }
+      else if(response.cliente[0].razao_social){
+        $("#nome_cliente").text(response.cliente[0].razao_social);
+      }
+      $("#nome_loja").text(response.cliente[0].nome_fantasia);
+      for(let contador= 0; contador < response.servicos.length; contador++){
+        response.servicos[contador].valor = (response.servicos[contador].valor / 100)
+        subtotal += response.servicos[contador].valor
         items += '<tr>'
-        items += '<td>'+response[key].nome+'</td>'
-        items += '<td class="font-weight-bold"> R$ '+response[key].valor.toLocaleString('pt-br', { minimumFractionDigits: 2 }) +'</td>'
+        items += '<td>'+response.servicos[contador].nome+'</td>'
+        items += '<td class="font-weight-bold"> R$ '+response.servicos[contador].valor.toLocaleString('pt-br', { minimumFractionDigits: 2 }) +'</td>'
         items += '</tr>'
+      }
 
-        if (!response[key].situacao) {
-      
-          $("#status_os").text('Aguardando Pagamento');
-        }
-        else if (response[key].situacao == 1) {
+      $("#status_os").text(response.nome_situacao);
+      $("#cepcli").text(response[key].cep_cli)
+      $("#cep_loja").text(response[key].ceploja)
 
-          $("#status_os").text('Pago');
-        }
-        else if (response[key].situacao == 2) {
+      $("#endceli").text(response[key].cep_cli)
+      $("#endloja").text(response[key].ceploja)
 
-          $("#status_os").text('Pago - serviço iniciado');
-        }
-        else if (response[key].situacao == 3) {
-
-          $("#status_os").text('Pago - Aguardando retirada do Cliente');
-        }
-        else if (response[key].situacao == 4) {
-          $("#status_os").text('Pago - Remarketing');
-         
-        }
-        else if (response[key].situacao == 5) {
-          $("#status_os").text('Remarketing');
-       
-        }
-        else if (response[key].situacao == 6) {
-          $("#status_os").text('Cancelado');
-        
-        }
-        $("#cepcli").text(response[key].cep_cli)
-        $("#cep_loja").text(response[key].ceploja)
-  
-        $("#endceli").text(response[key].cep_cli)
-        $("#endloja").text(response[key].ceploja)
-  
-        $("#endloja").text(response[key].logradouro_loja + ',' + response[key].numero_loja + ' - ' + response[key].complemento_loja + ' ' + response[key].bairro_loja + ' - ' + response[key].cidade_loja +'/'+response[key].estado_loja)
-        $("#endceli").text(response[key].logradouro_cli + ',' + response[key].numero_cli + ' - ' + response[key].complemento_cli + ' ' + response[key].bairro_cli + ' - ' + response[key].cidade_cli +'/'+response[key].estado_cli)
-       
-      });
+      $("#endloja").text(response[key].logradouro_loja + ',' + response[key].numero_loja + ' - ' + response[key].complemento_loja + ' ' + response[key].bairro_loja + ' - ' + response[key].cidade_loja +'/'+response[key].estado_loja)
+      $("#endceli").text(response[key].logradouro_cli + ',' + response[key].numero_cli + ' - ' + response[key].complemento_cli + ' ' + response[key].bairro_cli + ' - ' + response[key].cidade_cli +'/'+response[key].estado_cli)
       $("#subtotal").text('R$ ' +subtotal.toLocaleString('pt-br', { minimumFractionDigits: 2 }));
       $("#valor_desconto").text('R$ ' +desconto.toLocaleString('pt-br', { minimumFractionDigits: 2 }));
       $("#total").text('R$ ' +(subtotal - desconto).toLocaleString('pt-br', { minimumFractionDigits: 2 }));

@@ -33,7 +33,7 @@
                                                         </div>
                                                         <div class="due-date">
                                                             <span class="font-weight-bold no-wrap">Data de lançamento da OS: </span>
-                                                            <span id="data_lancamento">06/04/2019</span>
+                                                            <span id="data_lancamento"></span>
                                                         </div>
                                                     </div>
                                                 </div>
