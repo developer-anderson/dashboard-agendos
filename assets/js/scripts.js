@@ -305,7 +305,18 @@ function addOs(formid) {
 
     type: 'post',
     dataType: 'json',
-    data: $("#" + formid).serialize()
+    data:{
+      id_servico:$("#lservicos").val(),
+      id_cliente:$("#id_cliente").val(),
+      id_veiculo:$("#id_veiculo").val(),
+      inicio_os:$("#inicio_os").val(),
+      inicio_os_time:$("#inicio_os_time").val(),
+      previsao_os:$("#previsao_os").val(),
+      previsao_os_time:$("#previsao_os_time").val(),
+      remarketing:$("#remarketing").val(),
+      situacao:$("#situacao").val(),
+      observacoes:$("#observacoes").val(),
+    }
   })
     .done(function (response) {
       console.log(response)

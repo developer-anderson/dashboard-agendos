@@ -41,16 +41,7 @@
                                     <div class="card">
                                         <div class="card-header card-header-flex">
                                             <h4 class="card-title mb-1">Lista de ordens de serviço</h4>
-                                            <div class="form-group filter-date">
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control showdropdowns">
-                                                    <div class="input-group-append">
-                                                        <span class="input-group-text">
-                                                            <span class="fa fa-calendar"></span>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                    
                                         </div>
 
                                         <div class="card-content">
