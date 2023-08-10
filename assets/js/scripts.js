@@ -517,14 +517,23 @@ function editarVeiculo(formid) {
     });
 }
 function editaros(formid) {
-  var dados = $("#" + formid).serialize()
-
   $.ajax({
     url: endpoint+'/os/update/' + os_id,
 
     type: 'put',
     dataType: 'json',
-    data: $("#" + formid).serialize()
+    data: {
+      id_servico:$("#lservicos").val(),
+      id_cliente:$("#id_cliente").val(),
+      id_veiculo:$("#id_veiculo").val(),
+      inicio_os:$("#inicio_os").val(),
+      inicio_os_time:$("#inicio_os_time").val(),
+      previsao_os:$("#previsao_os").val(),
+      previsao_os_time:$("#previsao_os_time").val(),
+      remarketing:$("#remarketing").val(),
+      situacao:$("#situacao").val(),
+      observacoes:$("#observacoes").val(),
+    }
   })
     .done(function (response) {
       console.log(response)
@@ -1090,55 +1099,33 @@ function getAllOs() {
     dataType: 'json',
     success: function (response) {
       os = response
+     
       Object.keys(response).forEach(function (key, index) {
-        let inicio_os = response[key].inicio_os.split(" ")
-        let inicio_data = inicio_os[0].split("-")
+        let valor_total_os = 0
+        let servicos_os = ''
+        let inicio_data = response[key].inicio_os.split("-")
         let data_formadata_inicio = inicio_data[2] + '/' + inicio_data[1] + '/' + inicio_data[0]
-
-        let previsao_os = response[key].previsao_os.split(" ")
-        let previsao_data = inicio_os[0].split("-")
+        for(let contador = 0; contador < response[key].servicos.length; contador ++){
+          valor_total_os += (response[key].servicos[contador].valor / 100);
+          servicos_os += '| '+response[key].servicos[contador].nome
+        }
+        valor_total_os = valor_total_os.toLocaleString('pt-br', {minimumFractionDigits: 2})
+        let previsao_data = response[key].inicio_os.split("-")
         let data_formadata_previsao = previsao_data[2] + '/' + previsao_data[1] + '/' + previsao_data[0]
         td_os += '<tr>'
         td_os += '<td class="big-item-table">#' + response[key].id + '</td>'
-        td_os += '<td class="big-item-table">' + response[key].valor + '</td>'
-        if (response[key].nome_f) {
-          td_os += '<td class="big-item-table">' + response[key].nome_f + '</td>'
+        td_os += '<td class="big-item-table">' + valor_total_os + '</td>'
+        if (response[key].cliente.nome_f) {
+          td_os += '<td class="big-item-table">' + response[key].cliente.nome_f + '</td>'
 
         }
         else {
-          td_os += '<td class="big-item-table">' + response[key].razao_social + '</td>'
+          td_os += '<td class="big-item-table">' + response[key].cliente.razao_social + '</td>'
         }
-        td_os += '<td class="big-item-table">' + response[key].nome + '</td>'
-        td_os += '<td class="big-item-table">' + response[key].placa + ' - ' + response[key].modelo + '</td>'
-        td_os += '<td class="big-item-table">' + data_formadata_inicio + ' ' + inicio_os[1] + '</td>'
-        td_os += '<td class="big-item-table">' + data_formadata_previsao + ' ' + previsao_os[1] + '</td>'
-        if (!response[key].situacao) {
-          td_os += '<td > <div class="badge badge-warning">Aguardando Pagamento</div></td>'
-        }
-        else if (response[key].situacao == 1) {
-
-          td_os += '<td > <div class="badge badge-success">Pago</div></td>'
-        }
-        else if (response[key].situacao == 2) {
-
-          td_os += '<td > <div class="badge badge-success">Pago - serviço iniciado</div></td>'
-        }
-        else if (response[key].situacao == 3) {
-
-          td_os += '<td > <div class="badge badge-success">Pago - Aguardando retirada do Cliente</div></td>'
-        }
-        else if (response[key].situacao == 4) {
-
-          td_os += '<td > <div class="badge badge-success">Pago - Remarketing</div></td>'
-        }
-        else if (response[key].situacao == 5) {
-
-          td_os += '<td > <div class="badge badge-warning">Remarketing</div></td>'
-        }
-        else if (response[key].situacao == 6) {
-
-          td_os += '<td > <div class="badge badge-danger">Cancelado</div></td>'
-        }
+        td_os += '<td class="big-item-table">' + servicos_os + '</td>'
+        td_os += '<td class="big-item-table">' + data_formadata_inicio + ' ' +  response[key].inicio_os_time+ '</td>'
+        td_os += '<td class="big-item-table">' + data_formadata_previsao + ' ' + response[key].previsao_os_time + '</td>'
+        td_os += '<td class="big-item-table">' + response[key].nome_situacao + '</td>'
 
         td_os += '<td class="big-item-table action-buttons"><button onclick="getOs(' + key + ')"class="see-table-item" id="seeTableItem"><i class="fa fa-pencil"></i></button><a href="pdf_os.php?os_id=' + response[key].id + '"> <button class="see-table-item" id="seeTableItem"><i class="fa fa-eye"></i></button></a></td>'
 
@@ -1246,13 +1233,13 @@ function getOs(chave) {
   $("#situacao").val(os[chave].situacao).change();
   $("#remarketing").val(os[chave].remarketing)
   $("#observacoes").text(os[chave].observacoes);
-  let inicio_os = os[chave].inicio_os.split(" ")
-  let previsao_os = os[chave].previsao_os.split(" ")
-  $("#inicio_os").val(inicio_os[0])
-  $("#inicio_os_time").val(inicio_os[1])
-  $("#previsao_os").val(previsao_os[0])
-  previsao_os_time = previsao_os[1]
-  $("#previsao_os_time").val(previsao_os[1])
+  let inicio_os = os[chave].inicio_os
+  let previsao_os = os[chave].previsao_os
+  $("#inicio_os").val(inicio_os)
+  $("#inicio_os_time").val(os[chave].inicio_os_time)
+  $("#previsao_os").val(previsao_os)
+
+  $("#previsao_os_time").val(os[chave].previsao_os_time)
   $("#btnAddServico").text("Editar");
   $("#btnAddServico").attr('onclick', "editaros('OrdemDeServicoForm')")
   os_id = os[chave].id

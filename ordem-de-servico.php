@@ -76,7 +76,7 @@
                                                                         <th class="sorting_asc">Valor(R$)</th>
                                                                         <th class="sorting_asc">Nome do cliente</th>
                                                                         <th class="sorting_asc">Serviço</th>
-                                                                        <th class="sorting_asc">Veículo</th>
+                                                             
                                                                         <th class="sorting_asc">Data e horário da O.S.</th>
                                                                         <th class="sorting_asc">Previsão de entrega</th>
                                                                         
@@ -164,7 +164,7 @@
                                                                         <input type="time" class="form-control" name="previsao_os_time" id="previsao_os_time">
                                                                     </div>
                                                                 </div>
-                                                                <input name="user_id" type="hidden" class="form-control user_id" id="user_id">
+                                                             
                                                                 <div class="col-xxl-2 col-sm-2">
                                                                     <fieldset class="form-group">
                                                                         <label for="clienteOs">Remarketing (dias):</label>
