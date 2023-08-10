@@ -299,7 +299,6 @@ function addCliente(formid) {
 }
 function addOs(formid) {
   var dados = $("#" + formid).serialize()
-
   $.ajax({
     url: endpoint+'/os/insert',
 
@@ -307,7 +306,7 @@ function addOs(formid) {
     dataType: 'json',
     data:{
       id_servico:$("#lservicos").val(),
-      id_cliente:$("#id_cliente").val(),
+      id_cliente:$("#donoVeiculo").val(),
       id_veiculo:$("#id_veiculo").val(),
       inicio_os:$("#inicio_os").val(),
       inicio_os_time:$("#inicio_os_time").val(),
@@ -316,6 +315,7 @@ function addOs(formid) {
       remarketing:$("#remarketing").val(),
       situacao:$("#situacao").val(),
       observacoes:$("#observacoes").val(),
+      user_id:$(".user_id").val()
     }
   })
     .done(function (response) {
@@ -705,22 +705,7 @@ if (window.location.pathname.includes("/pdf_os.php")) {
   var urlParams = new URLSearchParams(window.location.search);
   os_id = urlParams.get("os_id")
 
-  if (os_id) {
-    getPdfOs(os_id)
-  }
-  else {
-    Swal.fire({
-      title: "Erro",
-      text: "Erro ao encontrar a OS informado",
-      type: "error",
-      confirmButtonClass: "btn btn-danger",
-      buttonsStyling: false
-    });
-    setTimeout(function () {
-      window.location.href = 'ordem-de-servico.php';
-    }, 2000)
-
-  }
+  getPdfOs(os_id)
 
 }
 if (window.location.pathname.includes("/editar-servico.php")) {
@@ -832,14 +817,7 @@ function getPdfOs(id) {
       }
 
       $("#status_os").text(response.nome_situacao);
-      $("#cepcli").text(response[key].cep_cli)
-      $("#cep_loja").text(response[key].ceploja)
-
-      $("#endceli").text(response[key].cep_cli)
-      $("#endloja").text(response[key].ceploja)
-
-      $("#endloja").text(response[key].logradouro_loja + ',' + response[key].numero_loja + ' - ' + response[key].complemento_loja + ' ' + response[key].bairro_loja + ' - ' + response[key].cidade_loja +'/'+response[key].estado_loja)
-      $("#endceli").text(response[key].logradouro_cli + ',' + response[key].numero_cli + ' - ' + response[key].complemento_cli + ' ' + response[key].bairro_cli + ' - ' + response[key].cidade_cli +'/'+response[key].estado_cli)
+     
       $("#subtotal").text('R$ ' +subtotal.toLocaleString('pt-br', { minimumFractionDigits: 2 }));
       $("#valor_desconto").text('R$ ' +desconto.toLocaleString('pt-br', { minimumFractionDigits: 2 }));
       $("#total").text('R$ ' +(subtotal - desconto).toLocaleString('pt-br', { minimumFractionDigits: 2 }));

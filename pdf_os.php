@@ -111,7 +111,7 @@
                                                     <ul class="list-group cost-list">
                                                         <li class="list-group-item each-cost border-0 p-50 d-flex justify-content-between">
                                                             <span class="cost-title mr-2">Status </span>
-                                                            <span class="cost-value" id="status_os">$ 72.00</span>
+                                                            <span class="cost-value status_os" id="status_os">$ 72.00</span>
                                                         </li>
                                                         <li class="list-group-item each-cost border-0 p-50 d-flex justify-content-between">
                                                             <span class="cost-title mr-2">Disconto </span>
